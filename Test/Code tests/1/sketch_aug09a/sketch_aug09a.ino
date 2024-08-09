@@ -18,10 +18,16 @@
 #define ECHO_RIGHT       14
 
 //__________________________ Define Motors Pins __________________________//
-#define LEFT_MOTOR_P1  2
-#define LEFT_MOTOR_P2 4
+#define LEFT_MOTOR_P1   2
+#define LEFT_MOTOR_P2   4
 #define RIGHT_MOTOR_P1 15
 #define RIGHT_MOTOR_P2 13
+
+//__________________________ Define IR Sensor Pins __________________________//
+#define IR_FRONT_PIN  34
+#define IR_BACK_PIN   35
+#define IR_LEFT_PIN   36
+#define IR_RIGHT_PIN  39
 
 //__________________________ Define constants __________________________//
 #define SPEED           255
@@ -132,6 +138,24 @@ public:
     }
 };
 
+//__________________________ IR Sensor Class __________________________//
+class IRSensor
+{
+private:
+    int _irPin;
+public:
+    IRSensor(int irPin)
+    {
+        _irPin = irPin;
+        pinMode(_irPin, INPUT);
+    }
+
+    bool detectWhiteLine()
+    {
+        return digitalRead(_irPin) == LOW; // Assuming LOW means white line detected
+    }
+};
+
 //__________________________ Ultrasonic sensor positions __________________________//
 enum SensorPosition_t
 {
@@ -145,16 +169,17 @@ enum SensorPosition_t
 
 //__________________________ Ultrasonic sensor objects __________________________//
 Ultrasonic frontLeft(TRIG_FRONT_LEFT, ECHO_FRONT_LEFT);
-
 Ultrasonic frontMid(TRIG_FRONT_MID, ECHO_FRONT_MID);
-
 Ultrasonic frontRight(TRIG_FRONT_RIGHT, ECHO_FRONT_RIGHT);
-
 Ultrasonic back(TRIG_BACK, ECHO_BACK);
-
 Ultrasonic left(TRIG_LEFT, ECHO_LEFT);
-
 Ultrasonic right(TRIG_RIGHT, ECHO_RIGHT);
+
+//__________________________ IR sensor objects __________________________//
+IRSensor irFront(IR_FRONT_PIN);
+IRSensor irBack(IR_BACK_PIN);
+IRSensor irLeft(IR_LEFT_PIN);
+IRSensor irRight(IR_RIGHT_PIN);
 
 
 //__________________________ Motor object __________________________//
@@ -181,9 +206,18 @@ float measureDistance(SensorPosition_t SensorPosition)
   }
 }
 
+//__________________________ Interrupt Handlers Declaration __________________________//
+void IRFrontISR();
+void IRBackISR();
+void IRLeftISR();
+void IRRightISR();
+
 void setup()
 {
-  
+  attachInterrupt(digitalPinToInterrupt(IR_FRONT_PIN), IRFrontISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(IR_BACK_PIN), IRBackISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(IR_LEFT_PIN), IRLeftISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(IR_RIGHT_PIN), IRRightISR, FALLING);
 }
 
 void loop()
@@ -228,4 +262,51 @@ void loop()
     }
   }
   delay(10);
+}
+
+
+//__________________________ Interrupt Handlers Definition __________________________//
+
+void IRFrontISR()
+{
+    if (irFront.detectWhiteLine())
+    {
+        motor.moveBackward(SPEED); // Move backward if white line is detected in front
+        delay(500);
+        motor.turnRight(TURN_SPEED);
+        delay(250);
+    }
+}
+
+void IRBackISR()
+{
+    if (irBack.detectWhiteLine())
+    {
+        motor.moveForward(SPEED); // Move forward if white line is detected in back
+        delay(500);
+        motor.turnLeft(TURN_SPEED);
+        delay(250);
+    }
+}
+
+void IRLeftISR()
+{
+    if (irLeft.detectWhiteLine())
+    {
+        motor.turnRight(TURN_SPEED); // Turn right if white line is detected on the left
+        delay(500);
+        motor.moveForward(SPEED);
+        delay(500);
+    }
+}
+
+void IRRightISR()
+{
+    if (irRight.detectWhiteLine())
+    {
+        motor.turnLeft(TURN_SPEED); // Turn left if white line is detected on the right
+        delay(500);
+        motor.moveForward(SPEED);
+        delay(500);
+    }
 }
