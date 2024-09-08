@@ -274,7 +274,9 @@ void loop()
   {
     command=SerialBT.read();
     if(command == STOP)
+    {
       prevState = STOP;
+    }
   }
   if(command == START)
   {
@@ -284,54 +286,54 @@ void loop()
       prevState = START;
     }
     float frontLeftDistance     =   measureDistance(FRONT_LEFT);
-  delay(10);
-  float frontRightDistance     =   measureDistance(FRONT_RIGHT);
-  delay(10);
-  float backDistance         =   measureDistance(BACK);
-  delayMicroseconds(10);
-  float leftDistance         =   measureDistance(LEFT);
-  delayMicroseconds(10);
-  float rightDistance        =   measureDistance(RIGHT);
-  delayMicroseconds(10);
-  
-  if(frontLeftDistance < minDistance && frontRightDistance < minDistance)
-  {
-    motor.moveForward(SPEED);
     delay(10);
-  }
-  else if(leftDistance < minDistance || (frontLeftDistance < minDistance && frontRightDistance > minDistance))
-  {
-    while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+    float frontRightDistance     =   measureDistance(FRONT_RIGHT);
+    delay(10);
+    float backDistance         =   measureDistance(BACK);
+    delayMicroseconds(10);
+    float leftDistance         =   measureDistance(LEFT);
+    delayMicroseconds(10);
+    float rightDistance        =   measureDistance(RIGHT);
+    delayMicroseconds(10);
+    
+    if(frontLeftDistance < minDistance && frontRightDistance < minDistance)
     {
-      motor.turnLeft(TURN_SPEED);
+      motor.moveForward(SPEED);
       delay(10);
-      frontLeftDistance = measureDistance(FRONT_LEFT);
-      frontRightDistance = measureDistance(FRONT_RIGHT);
     }
-  }
-  
-  else if(backDistance < minDistance || rightDistance < minDistance || (frontLeftDistance > minDistance && frontRightDistance < minDistance))
-  {
-    while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+    else if(leftDistance < minDistance || (frontLeftDistance < minDistance && frontRightDistance > minDistance))
     {
-      motor.turnRight(TURN_SPEED);
-      delay(10);
-      frontLeftDistance = measureDistance(FRONT_LEFT);
-      frontRightDistance = measureDistance(FRONT_RIGHT);
+      while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+      {
+        motor.turnLeft(TURN_SPEED);
+        delay(10);
+        frontLeftDistance = measureDistance(FRONT_LEFT);
+        frontRightDistance = measureDistance(FRONT_RIGHT);
+      }
     }
-  }
-  else
-  {
-    while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+    
+    else if(backDistance < minDistance || rightDistance < minDistance || (frontLeftDistance > minDistance && frontRightDistance < minDistance))
     {
-      motor.turnRight(TURN_SPEED);
-      delay(10);
-      frontLeftDistance = measureDistance(FRONT_LEFT);
-      frontRightDistance = measureDistance(FRONT_RIGHT);
+      while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+      {
+        motor.turnRight(TURN_SPEED);
+        delay(10);
+        frontLeftDistance = measureDistance(FRONT_LEFT);
+        frontRightDistance = measureDistance(FRONT_RIGHT);
+      }
     }
-  }
-  delay(10);
-  }
+    else
+    {
+      while(frontLeftDistance > minDistance || frontRightDistance > minDistance)
+      {
+        motor.turnRight(TURN_SPEED);
+        delay(10);
+        frontLeftDistance = measureDistance(FRONT_LEFT);
+        frontRightDistance = measureDistance(FRONT_RIGHT);
+      }
+    }
+    delay(10);
+    }
 }
 /**
  * \brief Reads the distance from the given ultrasonic sensor position.
