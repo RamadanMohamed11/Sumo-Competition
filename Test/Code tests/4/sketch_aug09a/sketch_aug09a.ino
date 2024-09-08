@@ -288,11 +288,11 @@ void loop()
   float frontRightDistance     =   measureDistance(FRONT_RIGHT);
   delay(10);
   float backDistance         =   measureDistance(BACK);
-  delay(10);
+  delayMicroseconds(10);
   float leftDistance         =   measureDistance(LEFT);
-  delay(10);
+  delayMicroseconds(10);
   float rightDistance        =   measureDistance(RIGHT);
-  delay(10);
+  delayMicroseconds(10);
   
   if(frontLeftDistance < minDistance && frontRightDistance < minDistance)
   {
