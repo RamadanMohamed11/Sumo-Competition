@@ -2,14 +2,14 @@
 #define ledPin            13
 
 // ISR
-void detectWhiteLine();
+void detectBlackLine();
 
 void setup()
 {
   pinMode(irSensorPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
-  attachInterrupt(digitalPinToInterrupt(irSensorPin), detectWhiteLine, RISING);
+  attachInterrupt(digitalPinToInterrupt(irSensorPin), detectBlackLine, FALLING);
 
   digitalWrite(ledPin, LOW);
 }
@@ -19,10 +19,9 @@ void loop()
   delay(50);
 }
 
-void detectWhiteLine()
+void detectBlackLine()
 {
-  int sensorRead = analogRead(irSensorPin);
-  while (digitalRead(irSensorPin)==HIGH)
+  while (digitalRead(irSensorPin) == LOW)
   {
     digitalWrite(ledPin, HIGH);
   }
