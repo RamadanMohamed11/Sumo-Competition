@@ -1,8 +1,15 @@
 #include <BluetoothSerial.h>
 
 BluetoothSerial SerialBT;
-volatile char command='0';
-volatile char prevState='0';
+enum Command
+{
+  STOP = '0',
+  START = '1'
+};
+volatile char command=STOP;
+volatile char prevState=STOP;
+
+
 
 //__________________________ Define Ultrasonics Pins __________________________//
 #define TRIG_FRONT_LEFT   13
@@ -263,19 +270,18 @@ void setup()
  */
 void loop()
 {
-  //prevState
   if (SerialBT.available())
   {
     command=SerialBT.read();
-    if(command == '0')
-      prevState = '0';
+    if(command == STOP)
+      prevState = STOP;
   }
-  if(command == '1')
+  if(command == START)
   {
-    if(prevState=='0')
+    if(prevState==STOP)
     {
       delay(5000);
-      prevState = '1';
+      prevState = START;
     }
     float frontLeftDistance     =   measureDistance(FRONT_LEFT);
   delay(10);
