@@ -1,1 +1,35 @@
-Pin Number			Used For
+//__________________________ Define Ultrasonics Pins __________________________//
+#define TRIG_FRONT_LEFT   26
+#define ECHO_FRONT_LEFT   25
+
+#define TRIG_FRONT_RIGHT   7
+#define ECHO_FRONT_RIGHT   8
+
+#define TRIG_RIGHT 23
+#define ECHO_RIGHT 24
+
+#define TRIG_LEFT 27
+#define ECHO_LEFT 28
+
+#define TRIG_BACK 6
+#define ECHO_BACK 5
+
+//__________________________ Define IR Sensor Pins __________________________//
+#define IR_FRONT_LEFT_PIN  19
+#define IR_FRONT_RIGHT_PIN  18
+#define IR_BACK_LEFT_PIN   3
+#define IR_BACK_RIGHT_PIN   12
+
+//__________________________ Define Motors Pins __________________________//
+#define LEFT_MOTOR_P1 22
+#define LEFT_MOTOR_P2 21
+#define RIGHT_MOTOR_P1 9
+#define RIGHT_MOTOR_P2 10
+#define magnet 13
+
+//__________________________ Define constants __________________________//
+#define SPEED 255
+#define minDistance 140
+#define TURN_SPEED 150
+#define numReadings 10
+
